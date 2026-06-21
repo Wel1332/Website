@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360" viewBox="0 0 600 360">
+  <defs>
+    <radialGradient id="glow" cx="22%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#7c5cff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#7c5cff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="360" fill="#141416"/>
+  <rect width="600" height="360" fill="url(#glow)"/>
+  <rect x="1" y="1" width="598" height="358" fill="none" stroke="#232327"/>
+  <rect x="40" y="40" width="138" height="26" rx="13" fill="#1c1c20" stroke="#34343a"/>
+  <text x="58" y="58" font-family="Inter, Segoe UI, Arial" font-size="13" font-weight="600" fill="#a1a1aa" letter-spacing="1.5">PRODUCTIVITY</text>
+  <text x="40" y="150" font-family="Inter, Segoe UI, Arial" font-size="42" font-weight="700" fill="#f4f4f5" letter-spacing="-1">Notion Pack</text>
+  <g transform="translate(40,196)">
+    <rect width="320" height="34" rx="8" fill="#1c1c20" stroke="#232327"/>
+    <circle cx="22" cy="17" r="7" fill="none" stroke="#7c5cff" stroke-width="2"/>
+    <rect x="40" y="13" width="180" height="8" rx="4" fill="#34343a"/>
+    <rect y="48" width="320" height="34" rx="8" fill="#1c1c20" stroke="#232327"/>
+    <circle cx="22" cy="65" r="7" fill="#7c5cff"/>
+    <rect x="40" y="61" width="220" height="8" rx="4" fill="#34343a"/>
+    <rect y="96" width="320" height="34" rx="8" fill="#1c1c20" stroke="#232327"/>
+    <circle cx="22" cy="113" r="7" fill="none" stroke="#7c5cff" stroke-width="2"/>
+    <rect x="40" y="109" width="150" height="8" rx="4" fill="#34343a"/>
+  </g>
+</svg>

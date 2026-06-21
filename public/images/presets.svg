@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360" viewBox="0 0 600 360">
+  <defs>
+    <radialGradient id="glow2" cx="22%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#7c5cff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#7c5cff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="film" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff8a5c"/>
+      <stop offset="0.5" stop-color="#b5854b"/>
+      <stop offset="1" stop-color="#7c5cff"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="360" fill="#141416"/>
+  <rect width="600" height="360" fill="url(#glow2)"/>
+  <rect x="1" y="1" width="598" height="358" fill="none" stroke="#232327"/>
+  <rect x="40" y="40" width="150" height="26" rx="13" fill="#1c1c20" stroke="#34343a"/>
+  <text x="58" y="58" font-family="Inter, Segoe UI, Arial" font-size="13" font-weight="600" fill="#a1a1aa" letter-spacing="1.5">PHOTOGRAPHY</text>
+  <text x="40" y="150" font-family="Inter, Segoe UI, Arial" font-size="40" font-weight="700" fill="#f4f4f5" letter-spacing="-1">Cinematic Presets</text>
+  <g transform="translate(40,196)">
+    <rect width="150" height="118" rx="12" fill="url(#film)" opacity="0.9"/>
+    <rect x="166" y="0" width="150" height="118" rx="12" fill="#1c1c20" stroke="#232327"/>
+    <rect x="166" y="0" width="150" height="118" rx="12" fill="url(#film)" opacity="0.22"/>
+    <circle cx="241" cy="59" r="30" fill="none" stroke="#f4f4f5" stroke-width="2" opacity="0.85"/>
+    <circle cx="241" cy="59" r="12" fill="none" stroke="#f4f4f5" stroke-width="2" opacity="0.85"/>
+    <text x="332" y="52" font-family="Inter, Segoe UI, Arial" font-size="34" font-weight="700" fill="#f4f4f5">40</text>
+    <text x="332" y="86" font-family="Inter, Segoe UI, Arial" font-size="14" font-weight="500" fill="#a1a1aa">one-click looks</text>
+  </g>
+</svg>
