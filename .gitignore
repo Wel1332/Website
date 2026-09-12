@@ -19,3 +19,6 @@
 npm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code project-scoped MCP config (holds the Supabase project ref; keep it local)
+.mcp.json

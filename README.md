@@ -222,7 +222,7 @@ before deploying the code that depends on it.
 
 ---
 
-## ✅ Before you go live
+## Before you go live
 
 - [ ] Replace the seeded products and images from `/admin/products`
 - [ ] Set your brand, blurb, and support email in `shared/products.ts`
@@ -234,7 +234,7 @@ before deploying the code that depends on it.
 
 ---
 
-## 📁 Project structure
+## Project structure
 
 The `app/` folder is a thin routing layer Next.js requires — each file delegates
 to the real code in `frontend/`, `backend/`, or `lib/`.
@@ -302,7 +302,7 @@ docker-compose.yml        local Postgres 16
 public/images/            product images
 ```
 
-## 🎨 Customizing the look
+## Customizing the look
 
 Colors and fonts are design tokens in `frontend/styles/globals.css` under
 `@theme`. Change `--color-accent` to re-skin the whole site instantly.
