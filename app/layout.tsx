@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight } from "next/font/google";
+import { Bricolage_Grotesque, Newsreader, IBM_Plex_Mono } from "next/font/google";
 import { store } from "@/shared/products";
 import "@/frontend/styles/globals.css";
 
-const inter = Inter({
+/* Three faces, three jobs: a grotesque that carries the headlines, a serif
+   that carries the reading, and a mono that carries every number and label. */
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-bricolage",
   display: "swap",
 });
 
-const interTight = Inter_Tight({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  variable: "--font-inter-tight",
+  variable: "--font-newsreader",
   display: "swap",
-  weight: ["500", "600", "700", "800"],
+  style: ["normal", "italic"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-plex-mono",
+  display: "swap",
+  weight: ["400", "500", "600"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -59,7 +68,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${newsreader.variable} ${plexMono.variable}`}
+    >
       <body>{children}</body>
     </html>
   );

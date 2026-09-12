@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/backend/stripe";
-import { getProduct } from "@/shared/products";
+import { getProductById } from "@/lib/products";
 
 /** Creates a Stripe Checkout session for a single product. */
 export async function handleCheckout(req: NextRequest) {
@@ -19,8 +19,11 @@ export async function handleCheckout(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const product = productId ? getProduct(productId) : undefined;
-  if (!product) {
+  const product =
+    typeof productId === "string" && productId
+      ? await getProductById(productId)
+      : null;
+  if (!product || !product.active) {
     return NextResponse.json({ error: "Unknown product." }, { status: 404 });
   }
 

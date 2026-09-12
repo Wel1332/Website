@@ -2,12 +2,21 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Loader2 } from "lucide-react";
 import { Product, formatPrice } from "@/shared/products";
 
-export default function ProductCard({ product }: { product: Product }) {
+/* A catalogue plate: number, preview, specification, price. Plates alternate
+   sides down the page so the eye has somewhere to travel. */
+export default function ProductCard({
+  product,
+  index = 0,
+}: {
+  product: Product;
+  index?: number;
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const flipped = index % 2 === 1;
+  const plate = String(index + 1).padStart(2, "0");
 
   async function handleBuy() {
     setLoading(true);
@@ -32,55 +41,82 @@ export default function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <article className="card">
-      <div className="relative h-[180px] border-b border-border bg-surface-2">
-        <Image
-          src={product.image}
-          alt={`Preview of the ${product.name}`}
-          fill
-          sizes="(max-width: 700px) 100vw, 360px"
-          className="object-cover"
-        />
+    <article className="group border-t border-border py-12 first:border-t-0 first:pt-0 md:py-14">
+      <div className="mb-8 flex items-baseline justify-between gap-4">
+        <span className="font-mono text-[0.8rem] font-medium tracking-[0.14em] text-accent">
+          № {plate}
+        </span>
+        <span className="label">Instant download</span>
       </div>
-      <div className="flex flex-1 flex-col p-[22px]">
-        <h3 className="text-[1.18rem] font-semibold leading-[1.25] tracking-[-0.02em]">
-          {product.name}
-        </h3>
-        <p className="mb-4 mt-2 text-[0.92rem] text-muted">{product.tagline}</p>
-        <ul className="mb-5 flex list-none flex-col gap-2">
-          {product.features.map((f) => (
-            <li
-              key={f}
-              className="flex items-start gap-2.5 text-[0.88rem] text-muted"
-            >
-              <span className="mt-[0.42em] h-2.5 w-2.5 shrink-0 rounded-full bg-accent-soft shadow-[inset_0_0_0_1px_var(--color-accent)]" />
-              {f}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-[18px]">
-          <span className="font-display text-[1.5rem] font-bold tracking-[-0.02em]">
-            {formatPrice(product.priceCents, product.currency)}
-          </span>
-          <button
-            className="btn btn-primary"
-            onClick={handleBuy}
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <Loader2 size={16} strokeWidth={2} className="animate-spin" />
-                Loading…
-              </>
-            ) : (
-              <>
-                Buy now
-                <ArrowRight size={16} strokeWidth={2} />
-              </>
-            )}
-          </button>
+
+      <div className="grid items-start gap-9 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:gap-14">
+        <div
+          className={`relative aspect-[5/3] overflow-hidden border border-border bg-surface-2 transition-colors duration-300 group-hover:border-border-hover ${
+            flipped ? "md:order-2" : ""
+          }`}
+        >
+          <Image
+            src={product.image}
+            alt={`Preview of the ${product.name}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 460px"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          />
         </div>
-        {error && <p className="mt-2.5 text-[0.82rem] text-danger">{error}</p>}
+
+        <div className={flipped ? "md:order-1" : ""}>
+          <h3 className="text-[clamp(1.6rem,3.4vw,2.15rem)]">{product.name}</h3>
+          <p className="mt-3 max-w-[46ch] text-[1.02rem] text-muted">
+            {product.tagline}
+          </p>
+
+          <div className="mt-8 flex items-center gap-4">
+            <span className="label">What&apos;s inside</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <ul className="mt-4 flex list-none flex-col gap-2.5">
+            {product.features.map((f) => (
+              <li
+                key={f}
+                className="flex items-start gap-3 text-[0.97rem] text-muted"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-[0.62em] h-[5px] w-[5px] shrink-0 bg-accent"
+                />
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-9 flex flex-wrap items-end justify-between gap-5 border-t border-border pt-6">
+            <div className="flex flex-col">
+              <span className="font-mono text-[2rem] font-medium leading-none tracking-[-0.03em]">
+                {formatPrice(product.priceCents, product.currency)}
+              </span>
+              <span className="label mt-2">
+                One payment · {product.currency.toUpperCase()}
+              </span>
+            </div>
+            <button
+              className="btn btn-brass"
+              onClick={handleBuy}
+              disabled={loading}
+            >
+              {loading ? "Opening Stripe…" : "Buy this"}
+              {!loading && <span aria-hidden="true">→</span>}
+            </button>
+          </div>
+
+          {error && (
+            <p
+              role="alert"
+              className="mt-4 border-l-2 border-danger pl-3 font-mono text-[0.8rem] text-danger"
+            >
+              {error}
+            </p>
+          )}
+        </div>
       </div>
     </article>
   );

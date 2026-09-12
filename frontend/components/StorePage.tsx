@@ -1,98 +1,123 @@
-import {
-  ShieldCheck,
-  Download,
-  RotateCcw,
-  Sparkles,
-  ArrowRight,
-  MousePointerClick,
-  CreditCard,
-  Star,
-  BadgeCheck,
-  Mail,
-  Plus,
-} from "lucide-react";
 import Link from "next/link";
-import { products, store } from "@/shared/products";
+import { store, type Product } from "@/shared/products";
 import ProductCard from "@/frontend/components/ProductCard";
+import Hallmark from "@/frontend/components/Hallmark";
 import Reveal from "@/frontend/components/Reveal";
 
-const stats = [
-  { value: "2,400+", label: "Happy customers" },
-  { value: "4.9/5", label: "Average rating" },
-  { value: "12k+", label: "Downloads delivered" },
-  { value: "14-day", label: "Money-back promise" },
-];
+const promises = ["Stripe checkout", "Instant download", "14-day refund"];
 
 const steps = [
   {
-    icon: MousePointerClick,
-    title: "Pick your product",
-    body: "Browse the collection and choose the tool that fits your workflow.",
+    title: "Pick a tool",
+    body: "Every listing says what's inside, what it opens in, and what it costs. No cart, no account, no upsell on the way out.",
   },
   {
-    icon: CreditCard,
-    title: "Checkout securely",
-    body: "Pay in seconds with Stripe. No account, no subscription, no hassle.",
+    title: "Pay through Stripe",
+    body: "Card details go straight to Stripe and never touch this site. One payment — there's nothing to cancel later.",
   },
   {
-    icon: Download,
-    title: "Download instantly",
-    body: "Get an email with your secure download link the moment you pay.",
+    title: "Download it",
+    body: "The link reaches your inbox the moment the payment clears. The files are yours, and so are the updates.",
   },
 ];
 
 const testimonials = [
   {
     quote:
-      "The Notion pack replaced five apps for me. Genuinely the best $29 I've spent this year.",
+      "I bought the Notion pack on a Sunday and had my whole freelance admin in one place by Monday. Haven't opened the other five apps since.",
     name: "Maya R.",
     role: "Freelance designer",
   },
   {
     quote:
-      "Downloaded the presets and my photos instantly looked like they belonged on a magazine cover.",
+      "Forty presets, and about twelve of them do almost all my work now. The install guide had me editing on my phone in two minutes.",
     name: "Daniel K.",
     role: "Travel photographer",
   },
   {
     quote:
-      "Used the resume kit and landed three interviews in two weeks. Worth every cent.",
+      "Rewrote my resume with the kit on a Tuesday. Three callbacks by the end of the following week — after months of nothing.",
     name: "Priya S.",
     role: "Marketing lead",
   },
 ];
 
-const navLink =
-  "ml-[26px] text-[0.92rem] text-muted transition-colors hover:text-text";
+const faqs = [
+  {
+    q: "How do I get the files?",
+    a: "Straight after checkout you land on a confirmation page, and an email arrives with your download link. There's no account to create and no waiting on a human.",
+  },
+  {
+    q: "Is paying safe?",
+    a: "Stripe handles the payment on its own hosted page. Your card number never reaches this site, so there's nothing here for anyone to steal.",
+  },
+  {
+    q: "Can I use these in paid client work?",
+    a: "Yes. Use them in your own projects and in work you're paid for. The one thing you can't do is resell or redistribute the files themselves.",
+  },
+  {
+    q: "What if it isn't what I expected?",
+    a: `Email ${store.supportEmail} within 14 days and we refund it in full. You don't need to explain why.`,
+  },
+];
 
 const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Store",
-  name: store.brand,
-  description: store.blurb,
-  url: siteUrl,
-  email: store.supportEmail,
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Digital products",
-    itemListElement: products.map((p) => ({
-      "@type": "Product",
-      name: p.name,
-      description: p.tagline,
-      image: `${siteUrl}${p.image}`,
-      offers: {
-        "@type": "Offer",
-        price: (p.priceCents / 100).toFixed(2),
-        priceCurrency: p.currency.toUpperCase(),
-        availability: "https://schema.org/InStock",
-      },
-    })),
-  },
-};
+/* Section heads share one structure: a mono label, a rule that measures the
+   width of the page, and an optional note carrying real data on the right. */
+function SectionHead({
+  label,
+  title,
+  note,
+}: {
+  label: string;
+  title?: string;
+  note?: string;
+}) {
+  return (
+    <div className="mb-12">
+      <div className="flex items-center gap-6">
+        <span className="label shrink-0">{label}</span>
+        <span className="h-px flex-1 bg-border" />
+        {note && <span className="label shrink-0">{note}</span>}
+      </div>
+      {title && (
+        <h2 className="mt-7 max-w-[20ch] text-[clamp(1.9rem,4.4vw,2.9rem)]">
+          {title}
+        </h2>
+      )}
+    </div>
+  );
+}
 
-export default function StorePage() {
+export default function StorePage({ products }: { products: Product[] }) {
+  const plateRange = `№ 01–${String(products.length).padStart(2, "0")}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    name: store.brand,
+    description: store.blurb,
+    url: siteUrl,
+    email: store.supportEmail,
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Digital products",
+      itemListElement: products.map((p) => ({
+        "@type": "Product",
+        name: p.name,
+        description: p.tagline,
+        image: `${siteUrl}${p.image}`,
+        offers: {
+          "@type": "Offer",
+          price: (p.priceCents / 100).toFixed(2),
+          priceCurrency: p.currency.toUpperCase(),
+          availability: "https://schema.org/InStock",
+        },
+      })),
+    },
+  };
+
   return (
     <>
       <script
@@ -101,316 +126,289 @@ export default function StorePage() {
       />
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:font-display focus:text-sm focus:font-semibold focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-accent focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:uppercase focus:tracking-[0.14em] focus:text-bg"
       >
         Skip to content
       </a>
-      <header className="sticky top-0 z-50 border-b border-border bg-bg/70 backdrop-blur-md backdrop-saturate-150">
-        <div className="mx-auto flex max-w-[1120px] items-center justify-between px-6 py-4">
+
+      <header className="sticky top-0 z-50 border-b border-border bg-bg">
+        <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 px-6 py-4">
           <a
-            className="font-display text-[1.28rem] font-bold tracking-[-0.03em]"
+            className="font-display text-[1.2rem] font-extrabold tracking-[-0.04em]"
             href="#"
           >
             {store.brand}
           </a>
-          <nav className="flex items-center">
-            <a className={navLink} href="#products">
-              Products
+          <nav className="flex items-center gap-7 font-mono text-[0.72rem] uppercase tracking-[0.16em]">
+            <a className="link hidden sm:inline" href="#catalogue">
+              Catalogue
             </a>
-            <a className={navLink} href="#faq">
-              FAQ
+            <a className="link hidden sm:inline" href="#delivery">
+              Delivery
             </a>
-            <a
-              className="ml-[26px] rounded-full border border-border-hover px-4 py-2 font-display text-[0.92rem] font-semibold text-text transition-colors hover:border-accent hover:bg-accent-soft"
-              href="#products"
-            >
-              Browse
+            <a className="link" href="#questions">
+              Questions
             </a>
           </nav>
         </div>
       </header>
 
       <main id="main-content" tabIndex={-1} className="outline-none">
-      <section className="mx-auto max-w-[820px] px-6 pb-[72px] pt-16 text-center sm:pt-[88px]">
-        <span className="mb-[26px] inline-flex items-center gap-[7px] rounded-full border border-border bg-surface px-3.5 py-1.5 font-display text-[0.8rem] font-medium text-muted">
-          <Sparkles size={14} strokeWidth={2} className="text-accent" />
-          Premium digital products
-        </span>
-        <h1 className="text-[clamp(2.4rem,6vw,4rem)] font-bold leading-[1.04] tracking-[-0.04em]">
-          {store.brand} — digital products,{" "}
-          <span className="text-accent">delivered instantly.</span>
-        </h1>
-        <p className="mx-auto mt-[22px] max-w-[560px] text-[clamp(1.05rem,2.2vw,1.25rem)] text-muted">
-          {store.blurb}
-        </p>
-        <div className="mt-[34px] flex flex-wrap justify-center gap-3">
-          <a className="btn btn-primary" href="#products">
-            Browse products
-            <ArrowRight size={16} strokeWidth={2} />
-          </a>
-          <a className="btn btn-ghost" href="#how">
-            How it works
-          </a>
-        </div>
-        <ul className="mt-[34px] flex list-none flex-wrap justify-center gap-x-6 gap-y-3">
-          <li className="inline-flex items-center gap-2 text-[0.85rem] text-muted">
-            <ShieldCheck size={16} strokeWidth={1.75} className="text-accent" />
-            Secure checkout by Stripe
-          </li>
-          <li className="inline-flex items-center gap-2 text-[0.85rem] text-muted">
-            <Download size={16} strokeWidth={1.75} className="text-accent" />
-            Instant download
-          </li>
-          <li className="inline-flex items-center gap-2 text-[0.85rem] text-muted">
-            <RotateCcw size={16} strokeWidth={1.75} className="text-accent" />
-            Money-back guarantee
-          </li>
-        </ul>
-      </section>
+        <section className="mx-auto max-w-[1180px] px-6 pb-20 pt-16 sm:pt-24">
+          <div className="grid items-center gap-14 md:grid-cols-[1fr_auto] md:gap-20">
+            <div>
+              <p className="label animate-rise">
+                {products.length} tools · nothing to subscribe to
+              </p>
 
-      <Reveal as="section" className="mx-auto mt-2 max-w-[1120px] px-6">
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-border bg-border sm:grid-cols-4">
-          {stats.map((s) => (
-            <div
-              key={s.label}
-              className="flex flex-col items-center gap-1 bg-bg px-3 py-7 text-center"
-            >
-              <span className="font-display text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-[-0.03em]">
-                {s.value}
-              </span>
-              <span className="text-[0.85rem] text-muted">{s.label}</span>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal
-        as="section"
-        id="products"
-        className="mx-auto max-w-[1120px] px-6 pb-[72px] pt-14"
-      >
-        <div className="mx-auto mb-10 max-w-[560px] text-center">
-          <h2 className="text-[clamp(1.7rem,4vw,2.4rem)] font-bold tracking-[-0.03em]">
-            Featured products
-          </h2>
-          <p className="mt-3 text-[1.02rem] text-muted">
-            Hand-crafted tools and templates — buy once, download instantly,
-            keep them forever.
-          </p>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[22px]">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal
-        as="section"
-        id="how"
-        className="mx-auto max-w-[1120px] px-6 py-16"
-      >
-        <div className="mx-auto mb-10 max-w-[560px] text-center">
-          <h2 className="text-[clamp(1.7rem,4vw,2.4rem)] font-bold tracking-[-0.03em]">
-            How it works
-          </h2>
-          <p className="mt-3 text-[1.02rem] text-muted">
-            From browse to download in under a minute — no account required.
-          </p>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
-          {steps.map((s, i) => (
-            <div key={s.title} className="panel relative px-6 py-7">
-              <span className="absolute right-6 top-[22px] font-display text-[2.4rem] font-bold leading-none text-surface-2">
-                {i + 1}
-              </span>
-              <span className="mb-[18px] inline-flex h-[46px] w-[46px] items-center justify-center rounded-xl bg-accent-soft text-accent">
-                <s.icon size={22} strokeWidth={1.75} />
-              </span>
-              <h3 className="mb-2 text-[1.12rem] font-semibold tracking-[-0.02em]">
-                {s.title}
-              </h3>
-              <p className="text-[0.93rem] text-muted">{s.body}</p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal
-        as="section"
-        className="mx-auto max-w-[1120px] px-6 pb-[72px] pt-12"
-      >
-        <div className="mx-auto mb-10 max-w-[560px] text-center">
-          <h2 className="text-[clamp(1.7rem,4vw,2.4rem)] font-bold tracking-[-0.03em]">
-            Loved by creators
-          </h2>
-          <p className="mt-3 text-[1.02rem] text-muted">
-            Join thousands who ship faster with Pixelforge products.
-          </p>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
-          {testimonials.map((t) => (
-            <figure key={t.name} className="panel flex flex-col gap-3.5 p-6">
-              <div
-                className="flex gap-[3px] text-accent"
-                role="img"
-                aria-label="Rated 5 out of 5 stars"
-              >
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={15}
-                    fill="currentColor"
-                    strokeWidth={0}
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-              <blockquote className="text-[1rem] leading-[1.55]">
-                {t.quote}
-              </blockquote>
-              <figcaption className="mt-auto flex flex-col">
-                <span className="font-display font-semibold tracking-[-0.01em]">
-                  {t.name}
+              <h1 className="mt-7 text-[clamp(2.8rem,8vw,5.2rem)] leading-[0.95]">
+                <span className="animate-rise block [animation-delay:80ms]">
+                  Made once.
                 </span>
-                <span className="text-[0.85rem] text-muted">{t.role}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </Reveal>
+                <span className="animate-rise block font-body font-normal italic tracking-[-0.02em] text-accent [animation-delay:160ms]">
+                  Yours forever.
+                </span>
+              </h1>
 
-      <Reveal as="section" className="mx-auto max-w-[1120px] px-6 pb-2 pt-6">
-        <div className="flex flex-col items-start gap-[18px] rounded-[18px] border border-border p-8 [background:linear-gradient(120deg,var(--color-accent-soft),transparent_55%),var(--color-surface)] sm:flex-row sm:items-center sm:gap-6">
-          <span className="inline-flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-            <BadgeCheck size={28} strokeWidth={1.75} />
-          </span>
-          <div className="flex-1">
-            <h2 className="text-[clamp(1.3rem,3vw,1.7rem)] font-bold tracking-[-0.03em]">
-              Try it risk-free for 14 days
-            </h2>
-            <p className="mt-1.5 text-[0.96rem] text-muted">
-              If a product isn&apos;t the right fit, email us within 14 days for
-              a full refund — no forms, no questions, no hard feelings.
-            </p>
+              <p className="animate-rise mt-8 max-w-[52ch] text-[1.08rem] text-muted [animation-delay:240ms]">
+                {store.brand} keeps a short catalogue of finished digital tools.
+                Pay through Stripe and the download link is in your inbox before
+                you close the tab — no account, no subscription, nothing that
+                renews.
+              </p>
+
+              <div className="animate-rise mt-10 flex flex-wrap gap-3 [animation-delay:320ms]">
+                <a className="btn btn-brass" href="#catalogue">
+                  Browse the catalogue
+                  <span aria-hidden="true">→</span>
+                </a>
+                <a className="btn btn-quiet" href="#delivery">
+                  How delivery works
+                </a>
+              </div>
+            </div>
+
+            <Hallmark
+              brand={store.brand}
+              className="animate-strike w-[168px] justify-self-start md:w-[248px] md:justify-self-end"
+            />
           </div>
-          <a className="btn btn-primary w-full shrink-0 sm:w-auto" href="#products">
-            Browse products
-            <ArrowRight size={16} strokeWidth={2} />
-          </a>
-        </div>
-      </Reveal>
 
-      <Reveal
-        as="section"
-        id="faq"
-        className="mx-auto max-w-[780px] px-6 pb-[72px] pt-12"
-      >
-        <h2 className="mb-6 text-[clamp(1.6rem,3.5vw,2.1rem)] font-bold tracking-[-0.03em]">
-          FAQ
-        </h2>
-        {[
-          {
-            q: "How do I receive my product?",
-            a: "Right after checkout you get an email with a secure download link. No account needed.",
-          },
-          {
-            q: "Is payment secure?",
-            a: "Yes. Payments are processed by Stripe. We never see or store your card details.",
-          },
-          {
-            q: "What's your refund policy?",
-            a: "If a product isn't what you expected, email us within 14 days for a full refund.",
-          },
-        ].map((item) => (
-          <details
-            key={item.q}
-            className="panel group mb-3 px-5 py-[18px] transition-colors open:border-border-hover"
-          >
-            <summary className="flex cursor-pointer list-none items-center justify-between font-display text-[1rem] font-semibold tracking-[-0.01em] [&::-webkit-details-marker]:hidden">
-              {item.q}
-              <Plus
-                size={20}
-                strokeWidth={2}
-                className="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45"
-              />
-            </summary>
-            <p className="mt-3 text-[0.95rem] text-muted">{item.a}</p>
-          </details>
-        ))}
-      </Reveal>
+          <ul className="animate-rise mt-16 flex list-none flex-wrap items-center gap-x-6 gap-y-3 border-t border-border pt-6 [animation-delay:400ms]">
+            {promises.map((p, i) => (
+              <li
+                key={p}
+                className={`label ${i > 0 ? "border-l border-border pl-6" : ""}`}
+              >
+                {p}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <Reveal
+          as="section"
+          id="catalogue"
+          className="mx-auto max-w-[1180px] px-6 pt-12"
+        >
+          <SectionHead
+            label="Catalogue"
+            title="Finished tools, not works in progress."
+            note={plateRange}
+          />
+          <div>
+            {products.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i} />
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal
+          as="section"
+          id="delivery"
+          className="mt-20 border-y border-border bg-surface py-20"
+        >
+          <div className="mx-auto max-w-[1180px] px-6">
+            <SectionHead
+              label="Delivery"
+              title="From click to file in under a minute."
+            />
+            <ol className="grid list-none gap-10 md:grid-cols-3 md:gap-12">
+              {steps.map((s, i) => (
+                <li
+                  key={s.title}
+                  className="md:border-l md:border-border md:pl-10 md:first:border-l-0 md:first:pl-0"
+                >
+                  <span className="font-mono text-[0.8rem] font-medium tracking-[0.14em] text-accent">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-4 text-[1.3rem]">{s.title}</h3>
+                  <p className="mt-3 text-[0.97rem] text-muted">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </Reveal>
+
+        <Reveal as="section" className="mx-auto max-w-[1180px] px-6 py-20">
+          <SectionHead label="From buyers" />
+          <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+            {testimonials.map((t) => (
+              <figure
+                key={t.name}
+                className="md:border-l md:border-border md:pl-10 md:first:border-l-0 md:first:pl-0"
+              >
+                <blockquote className="text-[1.05rem] leading-[1.6]">
+                  &ldquo;{t.quote}&rdquo;
+                </blockquote>
+                <figcaption className="mt-6">
+                  <span className="block font-display text-[0.98rem] font-semibold tracking-[-0.02em]">
+                    {t.name}
+                  </span>
+                  <span className="label mt-1.5 block">{t.role}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal as="section" className="mx-auto max-w-[1180px] px-6 pb-20">
+          <div className="flex flex-col gap-9 border-t border-border pt-12 md:flex-row md:items-end md:justify-between md:gap-16">
+            <div className="max-w-[54ch]">
+              <span className="label">Guarantee</span>
+              <h2 className="mt-5 text-[clamp(1.7rem,3.6vw,2.4rem)]">
+                Fourteen days to change your mind.
+              </h2>
+              <p className="mt-4 text-[1.02rem] text-muted">
+                Email us inside two weeks and we refund the whole amount. No
+                form to fill in, no reason required, no follow-up sequence
+                asking you to reconsider.
+              </p>
+            </div>
+            <a className="btn btn-brass shrink-0" href="#catalogue">
+              Browse the catalogue
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </Reveal>
+
+        <Reveal
+          as="section"
+          id="questions"
+          className="mx-auto max-w-[1180px] px-6 pb-24"
+        >
+          <div className="grid gap-10 border-t border-border pt-12 md:grid-cols-[210px_1fr] md:gap-16">
+            <div>
+              <span className="label">Questions</span>
+              <p className="mt-4 max-w-[26ch] text-[0.97rem] text-muted">
+                Anything else, write to{" "}
+                <a
+                  className="link text-text"
+                  href={`mailto:${store.supportEmail}`}
+                >
+                  {store.supportEmail}
+                </a>
+                .
+              </p>
+            </div>
+            <div>
+              {faqs.map((item) => (
+                <details
+                  key={item.q}
+                  className="group border-b border-border first:border-t first:border-border"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-[1.08rem] font-semibold tracking-[-0.02em] [&::-webkit-details-marker]:hidden">
+                    {item.q}
+                    <span
+                      aria-hidden="true"
+                      className="shrink-0 font-mono text-[1.15rem] font-medium text-accent transition-transform duration-200 group-open:rotate-45"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="max-w-[68ch] pb-6 text-[0.99rem] text-muted">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </main>
 
-      <footer className="mt-6 border-t border-border">
-        <div className="mx-auto flex max-w-[1120px] flex-wrap justify-between gap-10 px-6 pb-10 pt-14">
-          <div className="max-w-[320px]">
-            <span className="mb-3 inline-block font-display text-[1.28rem] font-bold tracking-[-0.03em]">
+      <footer className="border-t border-border bg-surface">
+        <div className="mx-auto grid max-w-[1180px] gap-12 px-6 py-16 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+          <div>
+            <span className="font-display text-[1.2rem] font-extrabold tracking-[-0.04em]">
               {store.brand}
             </span>
-            <p className="text-[0.92rem] text-muted">{store.blurb}</p>
-            <span className="mt-4 inline-flex items-center gap-[7px] text-[0.82rem] text-faint">
-              <ShieldCheck size={14} strokeWidth={1.75} className="text-accent" />
-              Secure payments by Stripe
-            </span>
+            <p className="mt-4 max-w-[34ch] text-[0.97rem] text-muted">
+              {store.blurb}
+            </p>
+            <span className="label mt-6 block">Payments secured by Stripe</span>
           </div>
-          <div className="flex gap-16">
-            <div className="flex flex-col gap-3">
-              <h4 className="mb-1 font-display text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-faint">
-                Shop
-              </h4>
-              <a className="text-[0.92rem] text-muted transition-colors hover:text-text" href="#products">
-                Products
-              </a>
-              <a className="text-[0.92rem] text-muted transition-colors hover:text-text" href="#how">
-                How it works
-              </a>
-              <a className="text-[0.92rem] text-muted transition-colors hover:text-text" href="#faq">
-                FAQ
-              </a>
-            </div>
-            <div className="flex flex-col gap-3">
-              <h4 className="mb-1 font-display text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-faint">
-                Support
-              </h4>
-              <a
-                className="inline-flex items-center gap-1.5 text-[0.92rem] text-muted transition-colors hover:text-text"
-                href={`mailto:${store.supportEmail}`}
-              >
-                <Mail size={13} strokeWidth={1.75} />
-                {store.supportEmail}
-              </a>
-              <Link className="text-[0.92rem] text-muted transition-colors hover:text-text" href="/refund">
-                Refund policy
-              </Link>
-            </div>
-            <div className="flex flex-col gap-3">
-              <h4 className="mb-1 font-display text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-faint">
-                Legal
-              </h4>
-              <Link className="text-[0.92rem] text-muted transition-colors hover:text-text" href="/terms">
-                Terms of Service
-              </Link>
-              <Link className="text-[0.92rem] text-muted transition-colors hover:text-text" href="/privacy">
-                Privacy Policy
-              </Link>
-            </div>
+
+          <div>
+            <h4 className="label">Shop</h4>
+            <ul className="mt-4 flex list-none flex-col items-start gap-2.5 text-[0.95rem]">
+              <li>
+                <a className="link" href="#catalogue">
+                  Catalogue
+                </a>
+              </li>
+              <li>
+                <a className="link" href="#delivery">
+                  Delivery
+                </a>
+              </li>
+              <li>
+                <a className="link" href="#questions">
+                  Questions
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="label">Support</h4>
+            <ul className="mt-4 flex list-none flex-col items-start gap-2.5 text-[0.95rem]">
+              <li>
+                <a className="link" href={`mailto:${store.supportEmail}`}>
+                  {store.supportEmail}
+                </a>
+              </li>
+              <li>
+                <Link className="link" href="/refund">
+                  Refund policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="label">Legal</h4>
+            <ul className="mt-4 flex list-none flex-col items-start gap-2.5 text-[0.95rem]">
+              <li>
+                <Link className="link" href="/terms">
+                  Terms of service
+                </Link>
+              </li>
+              <li>
+                <Link className="link" href="/privacy">
+                  Privacy policy
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-border px-6 py-5 text-center sm:flex-row sm:text-left">
-          <span className="text-[0.82rem] text-faint">
-            © {new Date().getFullYear()} {store.brand} · All rights reserved.
-          </span>
-          <span className="flex gap-4 text-[0.82rem] text-faint">
-            <Link className="transition-colors hover:text-text" href="/terms">
-              Terms
-            </Link>
-            <Link className="transition-colors hover:text-text" href="/privacy">
-              Privacy
-            </Link>
-            <Link className="transition-colors hover:text-text" href="/refund">
-              Refunds
-            </Link>
-          </span>
+
+        <div className="border-t border-border">
+          <div className="mx-auto flex max-w-[1180px] flex-col items-center justify-between gap-3 px-6 py-5 text-center sm:flex-row sm:text-left">
+            <span className="label">
+              © {new Date().getFullYear()} {store.brand}
+            </span>
+            <span className="label">All rights reserved</span>
+          </div>
         </div>
       </footer>
     </>
